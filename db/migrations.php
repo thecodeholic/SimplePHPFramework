@@ -17,7 +17,7 @@ try {
 
     $sql = "CREATE TABLE users (
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-        username VARCHAR(30) NOT NULL,
+        full_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
         password VARCHAR(255),
         reg_date TIMESTAMP
@@ -27,8 +27,8 @@ try {
     $conn->exec($sql);
     echo "Table \"users\" created successfully" . PHP_EOL;
 
-    $sql = "INSERT INTO users (username, email, password, reg_date)
-    VALUES ('admin', 'admin@webmaster.com', '" . password_hash('admin', PASSWORD_BCRYPT) . "', " . time() . ")";
+    $sql = "INSERT INTO users (full_name, email, password, reg_date)
+    VALUES ('John Doe', 'admin@example.com', '" . password_hash('admin', PASSWORD_BCRYPT) . "', " . time() . ")";
     // use exec() because no results are returned
     $conn->exec($sql);
     echo "User \"admin\" was inserted into database" . PHP_EOL;
