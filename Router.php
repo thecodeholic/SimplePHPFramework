@@ -90,12 +90,17 @@ class Router
         $layout = ob_get_contents();
         ob_end_clean();
 
+        return str_replace('{{content}}', $this->renderOnlyView($view), $layout);
+    }
+
+    public function renderOnlyView($view)
+    {
         $view = __DIR__ . "/views/$view.php";
         ob_start();
         include $view;
         $content = ob_get_contents();
         ob_end_clean();
 
-        return str_replace('{{content}}', $content, $layout);
+        return $content;
     }
 }
