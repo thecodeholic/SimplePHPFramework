@@ -56,22 +56,31 @@ class Router
         if (!isset($methodDictionary[$formattedRoute])) {
             return $this->defaultRequestHandler();
         }
-        $method = $methodDictionary[$formattedRoute];
-        if (is_null($method)) {
-            $this->defaultRequestHandler();
-            return;
+        $methodOrView = $methodDictionary[$formattedRoute];
+
+        if (is_string($methodOrView)) {
+            $content = $this->renderView($methodOrView);
+        } else {
+            $content = call_user_func_array($methodOrView, [$this->request]);
+            $content = $this->renderContent($content);
         }
 
-        $view = ltrim($formattedRoute, '/');
-        if ($formattedRoute === '/') {
-            $view = 'index';
-        }
-        echo $this->renderView($view);
+        echo $content;
     }
 
     function __destruct()
     {
         $this->resolve();
+    }
+
+    public function renderContent($content)
+    {
+        ob_start();
+        include __DIR__ . "/views/_layout.php";
+        $layout = ob_get_contents();
+        ob_end_clean();
+
+        return str_replace('{{content}}', $content, $layout);
     }
 
     public function renderView($view)
@@ -86,6 +95,7 @@ class Router
         include $view;
         $content = ob_get_contents();
         ob_end_clean();
+
         return str_replace('{{content}}', $content, $layout);
     }
 }
