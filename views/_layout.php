@@ -33,9 +33,23 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
-                <a href="/login" class="btn btn-outline-success">Log in</a>
-                &nbsp;&nbsp;
-                <a href="/signup" class="btn btn-outline-success">Sign up</a>
+                <?php if (!isLoggedIn()): ?>
+                    <a href="/login" class="btn btn-outline-success">Log in</a>
+                    &nbsp;&nbsp;
+                    <a href="/signup" class="btn btn-outline-success">Sign up</a>
+                <?php else: ?>
+                    &nbsp;&nbsp;
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Welcome <b><?php echo currentUser()['full_name'] ?></b>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/logout" class="btn btn-primary">Logout</a>
+                        </li>
+                    </ul>
+                <?php endif; ?>
             </form>
         </div>
     </div>
