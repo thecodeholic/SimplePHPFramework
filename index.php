@@ -13,12 +13,11 @@ HTML;
 $router->get('/profile', function ($request) {
     return <<<HTML
   <h1>Profile</h1>
-<button>Click me</button>
 HTML;
 });
-$router->get('/user', function ($request) {
+$router->get('/about', function ($request) {
     return <<<HTML
-  <h1>Profile</h1>
+  <h1>about</h1>
 HTML;
 });
 $router->post('/data', function ($request) {
