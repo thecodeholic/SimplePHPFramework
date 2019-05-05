@@ -43,6 +43,7 @@ class Router
     private function defaultRequestHandler()
     {
         header("{$this->request->serverProtocol} 404 Not Found");
+        echo $this->renderView('_404');
     }
 
     /**
@@ -52,21 +53,20 @@ class Router
     {
         $methodDictionary = $this->{strtolower($this->request->requestMethod)};
         $formattedRoute = $this->formatRoute($this->request->requestUri);
+        if (!isset($methodDictionary[$formattedRoute])) {
+            return $this->defaultRequestHandler();
+        }
         $method = $methodDictionary[$formattedRoute];
         if (is_null($method)) {
             $this->defaultRequestHandler();
             return;
         }
-        echo call_user_func_array($method, array($this->request));
-//        $layout = $this->renderView('layout');
-//        $content = call_user_func_array($method, array($this->request));
-//
-//        $view = ltrim($formattedRoute, '/');
-//        if ($formattedRoute === '/') {
-//            $view = 'index';
-//        }
-//        $content = $this->renderView($view);
-//        echo str_replace('{{content}}', $content, $layout);
+
+        $view = ltrim($formattedRoute, '/');
+        if ($formattedRoute === '/') {
+            $view = 'index';
+        }
+        echo $this->renderView($view);
     }
 
     function __destruct()
@@ -77,9 +77,15 @@ class Router
     public function renderView($view)
     {
         ob_start();
-        include __DIR__ . "/views/$view.php";
+        include __DIR__ . "/views/_layout.php";
+        $layout = ob_get_contents();
+        ob_end_clean();
+
+        $view = __DIR__ . "/views/$view.php";
+        ob_start();
+        include $view;
         $content = ob_get_contents();
         ob_end_clean();
-        return $content;
+        return str_replace('{{content}}', $content, $layout);
     }
 }
