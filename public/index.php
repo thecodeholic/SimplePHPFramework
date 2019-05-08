@@ -12,25 +12,18 @@ $router = new Router(new Request);
 
 $router->get('/', 'index');
 $router->get('/profile', 'profile');
-$router->get('/about', function ($request) {
-    return <<<HTML
-  <h1>about</h1>
-HTML;
-});
+$router->get('/about', 'about');
 $router->get('/login', 'login');
 $router->get('/logout', function(){
     session_unset();
     session_destroy();
     redirect('/');
 });
-$router->post('/submit-login', function (IRequest $request) use ($router, $db) {
+$router->post('/submit-login', function (IRequest $request) use ($db) {
     $body = $request->getBody();
     if ($db->loginUser($body['email'], $body['password'])) {
         redirect('/');
     } else {
         redirect('/login');
     }
-});
-$router->post('/data', function ($request) {
-    return json_encode($request->getBody());
 });
