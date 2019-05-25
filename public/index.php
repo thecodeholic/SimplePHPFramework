@@ -19,11 +19,15 @@ $router->get('/logout', function(){
     session_destroy();
     redirect('/');
 });
-$router->post('/submit-login', function (IRequest $request) use ($db) {
+$router->post('/login', function (IRequest $request) use ($db, $router) {
     $body = $request->getBody();
     if ($db->loginUser($body['email'], $body['password'])) {
         redirect('/');
     } else {
+        $viewParams = [
+            'error' => 'Username or password is incorrect'
+        ];
+        return $router->renderOnlyView('login', $viewParams);
         redirect('/login');
     }
 });

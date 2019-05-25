@@ -1,6 +1,11 @@
 <div>
     <h1>Login</h1>
-    <form method="post" action="/submit-login">
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger">
+            <p><?php echo $error ?></p>
+        </div>
+    <?php endif; ?>
+    <form method="post" action="/login">
         <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input type="email" class="form-control" id="exampleInputEmail1" name="email"

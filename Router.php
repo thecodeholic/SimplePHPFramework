@@ -93,8 +93,11 @@ class Router
         return str_replace('{{content}}', $this->renderOnlyView($view), $layout);
     }
 
-    public function renderOnlyView($view)
+    public function renderOnlyView($view, $viewVariables = [])
     {
+        foreach ($viewVariables as $key => $value){
+            $$key = $value;
+        }
         $view = __DIR__ . "/views/$view.php";
         ob_start();
         include $view;
