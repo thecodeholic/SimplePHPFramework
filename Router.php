@@ -52,7 +52,12 @@ class Router
     function resolve()
     {
         $methodDictionary = $this->{strtolower($this->request->requestMethod)};
-        $formattedRoute = $this->formatRoute($this->request->requestUri);
+        if ($this->request->requestUri === '/') {
+            $pathInfo = '/';
+        } else {
+            $pathInfo = $this->request->pathInfo;
+        }
+        $formattedRoute = $this->formatRoute($pathInfo);
         if (!isset($methodDictionary[$formattedRoute])) {
             return $this->defaultRequestHandler();
         }
