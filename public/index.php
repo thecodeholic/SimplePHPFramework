@@ -12,9 +12,22 @@ $router = new Router(new Request);
 
 $router->get('/', 'index');
 $router->get('/profile', 'profile');
-$router->get('/about', 'about');
-$router->get('/login', 'login');
-$router->get('/logout', function(){
+$router->get('/about', function (IRequest $request) use ($router){
+    $user = ['name' => 'John'];
+
+    $router->setLayout('admin');
+    return $router->renderOnlyView('about', ['user' => $user]);
+});
+$router->get('/login', function () use ($router) {
+    return $router->renderOnlyView('login', [
+        'errors' => [],
+        'data' => [
+            'email' => '',
+            'password' => ''
+        ]
+    ]);
+});
+$router->get('/logout', function () {
     session_unset();
     session_destroy();
     redirect('/');
@@ -24,10 +37,16 @@ $router->post('/login', function (IRequest $request) use ($db, $router) {
     if ($db->loginUser($body['email'], $body['password'])) {
         redirect('/');
     } else {
-        $viewParams = [
-            'error' => 'Username or password is incorrect'
-        ];
-        return $router->renderOnlyView('login', $viewParams);
-        redirect('/login');
+        return $router->renderOnlyView('login', [
+            'errors' => [
+                'password' => 'Username or password is incorrect',
+            ],
+            'data' => [
+                'email' => $body['email'],
+                'password' => $body['password']
+            ]
+        ]);
+//        renderViewWithErrors('login', ['error' => 'იმეილი ან პაროლი არასწორია']);
+//        redirect('/login');
     }
 });
