@@ -3,6 +3,8 @@
 class Router
 {
     private $request;
+    private $layout = 'layout';
+
     private $supportedHttpMethods = array(
         "GET",
         "POST"
@@ -20,6 +22,14 @@ class Router
             return $this->invalidMethodHandler();
         }
         $this->{strtolower($name)}[$this->formatRoute($route)] = $method;
+    }
+
+    /**
+     * @param string $layout
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
     }
 
     /**
@@ -81,7 +91,7 @@ class Router
     public function renderContent($content)
     {
         ob_start();
-        include __DIR__ . "/views/_layout.php";
+        include __DIR__ . "/views/_{$this->layout}.php";
         $layout = ob_get_contents();
         ob_end_clean();
 
@@ -91,7 +101,7 @@ class Router
     public function renderView($view)
     {
         ob_start();
-        include __DIR__ . "/views/_layout.php";
+        include __DIR__ . "/views/_{$this->layout}.php";
         $layout = ob_get_contents();
         ob_end_clean();
 

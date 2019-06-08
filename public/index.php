@@ -13,10 +13,7 @@ $router = new Router(new Request);
 $router->get('/', 'index');
 $router->get('/profile', 'profile');
 $router->get('/about', function (IRequest $request) use ($router){
-    $user = ['name' => 'John'];
-
-    $router->setLayout('admin');
-    return $router->renderOnlyView('about', ['user' => $user]);
+    return $router->renderOnlyView('about');
 });
 $router->get('/login', function () use ($router) {
     return $router->renderOnlyView('login', [
